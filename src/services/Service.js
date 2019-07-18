@@ -1,5 +1,22 @@
 import axios from 'axios';
+import AuthManagerUtil from '../utils/AuthManagerUtil';
 
-export default axios.create({
-    baseURL: 'https://www.googleapis.com/youtube/v3'
+   
+  
+ const api = axios.create({
+    baseURL: 'https://api-iddog.idwall.co'
 })
+
+api.interceptors.request.use(async (config) => {
+    if (!config.url.endsWith('signup')) {
+        const token = AuthManagerUtil.getAuthToken();
+        config.headers.Authorization = `Bearer ${token}`;
+    
+    }
+    return config;
+},(error) => {
+    return Promise.reject(error);
+});
+
+
+export default api;
